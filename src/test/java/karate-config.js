@@ -5,14 +5,21 @@ function fn() {
     env = 'dev';
   }
   var config = {
-    env: env,
-    myVarName: 'someValue'
+    apiUrl: 'https://conduit.productionready.io/api/'
   }
   if (env == 'dev') {
-    // customize
-    // e.g. config.foo = 'bar';
-  } else if (env == 'e2e') {
-    // customize
+   config.userEmail = 'prutik111@test.com'
+   config.userPassword = '12345678'
+
+  }  if (env == 'qa') {
+    config.userEmail = 'ana111@test.com'
+    config.userPassword = 'hello1234'
   }
+
+  var accessToken = karate.callSingle('classpath:helpers/CreateToken.feature', config).authToken
+  karate.configure('headers', {Authorization: 'Token ' + accessToken})
+  
   return config;
 }
+
+// mvn test -Dkarate.options="--tags @debug" -Dkarate.env="qa"  This is comment to run different environtment
