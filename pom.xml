@@ -13,7 +13,10 @@
         <maven.compiler.version>3.8.1</maven.compiler.version>
         <maven.surefire.version>2.22.2</maven.surefire.version>        
         <karate.version>1.4.0</karate.version>
-    </properties>    
+        <gatling.plugin.version>4.2.9</gatling.plugin.version>
+    </properties> 
+    
+       
 
     <dependencies>         
         <dependency>
@@ -22,6 +25,12 @@
             <version>${karate.version}</version>
             <scope>test</scope>
         </dependency>	
+        
+        <dependency>
+    <groupId>net.masterthought</groupId>
+    <artifactId>cucumber-reporting</artifactId>
+    <version>5.7.5</version>
+</dependency>
 
         <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
 <dependency>
@@ -29,6 +38,20 @@
     <artifactId>javafaker</artifactId>
     <version>1.0.2</version>
 </dependency>	
+
+<!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
+<dependency>
+    <groupId>com.microsoft.sqlserver</groupId>
+    <artifactId>mssql-jdbc</artifactId>
+    <version>12.2.0.jre11</version>
+</dependency>
+
+<dependency>
+    <groupId>com.intuit.karate</groupId>
+    <artifactId>karate-gatling</artifactId>
+    <version>${karate.version}</version>
+    <scope>test</scope>
+</dependency>
     
     </dependencies>
 
@@ -60,7 +83,43 @@
                 <configuration>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
                 </configuration>
-            </plugin>          
+            </plugin> 
+
+            <plugin>
+      <groupId>io.gatling</groupId>
+      <artifactId>gatling-maven-plugin</artifactId>
+      <version>${gatling.plugin.version}</version>
+      <configuration>
+          <simulationsFolder>src/test/java/conduitApp/perfomance</simulationsFolder>
+          <configFolder>src/test/java/conduitApp/perfomance/data</configFolder>
+           </configuration>               
+  </plugin>
+
+  <plugin>
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>scala-maven-plugin</artifactId>
+                    <version>4.5.6</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>testCompile</goal>
+                            </goals>
+                            <configuration>
+                                <args>
+                                    <arg>-Jbackend:GenBCode</arg>
+                                    <arg>-Jdelambdafy:method</arg>
+                                    <arg>-target:jvm-1.8</arg>
+                                    <arg>-deprecation</arg>
+                                    <arg>-feature</arg>
+                                    <arg>-unchecked</arg>
+                                    <arg>-language:implicitConversions</arg>
+                                    <arg>-language:postfixOps</arg>
+                                </args>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
         </plugins>        
     </build>       
     
